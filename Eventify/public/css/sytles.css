@@ -1,0 +1,15 @@
+/* Ensures the content container takes up the full width and centers everything */
+.content-container {
+    max-width: 800px; /* Optional: limits the width of the content */
+    margin: 0 auto; /* Centers the container horizontally */
+    text-align: center; /* Centers the text inside */
+}
+
+ul {
+    list-style-type: none; /* Removes the default bullet points */
+    padding: 0;
+}
+
+ul li {
+    margin: 10px 0; /* Adds space between list items */
+}

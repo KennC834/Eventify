@@ -1,0 +1,12 @@
+<%- include('partials/header') %>
+
+<div class="content-container">
+    <h1>Upcoming Events</h1>
+    <ul>
+        <% events.forEach(event => { %>
+            <li><strong><%= event.name %></strong> – <%= event.date %></li>
+        <% }) %>
+    </ul>
+</div>
+
+<%- include('partials/footer') %>
