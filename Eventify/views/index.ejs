@@ -1,12 +1,36 @@
 <%- include('partials/header') %>
 
-<div class="content-container">
-    <h1>Upcoming Events</h1>
-    <ul>
-        <% events.forEach(event => { %>
-            <li><strong><%= event.name %></strong> – <%= event.date %></li>
-        <% }) %>
-    </ul>
-</div>
+<main>
+    <h1 style="text-align:center;">Welcome to Eventify</h1>
+    <div style="display: flex; justify-content: space-between; width: 100%;">
+        <button onclick="document.location='/register'"
+                style="font-size: 20px; padding: 15px 30px; background-color: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 5px;">
+            Register
+        </button>
+
+        <button onclick="document.location='/login'"
+                style="font-size: 20px; padding: 15px 30px; background-color: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 5px;">
+            Login
+        </button>
+
+        <button onclick="document.location='/submit'"
+                style="font-size: 20px; padding: 15px 30px; background-color: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 5px;">
+            Submit
+        </button>
+
+        <button onclick="document.location='/events'"
+                style="font-size: 20px; padding: 15px 30px; background-color: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 5px;">
+            Events
+        </button>
+    </div>
+    <div>
+
+
+
+    </div>
+
+
+
+</main>
 
 <%- include('partials/footer') %>
