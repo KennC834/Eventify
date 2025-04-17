@@ -1,8 +1,14 @@
 <%- include('partials/header') %>
 
-<main>
-    <h1 style="text-align:center;">Welcome to Eventify</h1>
-    <div style="display: flex; justify-content: space-between; width: 100%;">
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+</head>
+
+<main style="text-align: center;">
+    <h1>Welcome to Eventify</h1>
+    <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
         <button onclick="document.location='/register'"
                 style="font-size: 20px; padding: 15px 30px; background-color: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 5px;">
             Register
@@ -23,14 +29,43 @@
             Events
         </button>
     </div>
-    <div>
 
-
-
-    </div>
-
-
-
+    <div id="map" style="height: 500px; width: 75%; margin: 0 auto;"></div>
 </main>
+
+<script>
+    var events = [
+        { name: 'AXP', address: '152 State St, Glassboro, NJ' },
+        { name: 'Campus Game Night', address: '201 Rowan Blvd, Glassboro, NJ 08028' }
+    ];
+
+    var map = L.map('map').setView([39.7014, 75.1063], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    function geocodeAddress(address, callback) {
+        var url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    var lat = data[0].lat;
+                    var lon = data[0].lon;
+                    callback(lat, lon);
+                }
+            });
+    }
+
+    events.forEach(function(event) {
+        geocodeAddress(event.address, function(lat, lon) {
+            L.marker([lat, lon])
+                .addTo(map)
+                .bindPopup(event.name)
+                .openPopup();
+        });
+    });
+</script>
 
 <%- include('partials/footer') %>
