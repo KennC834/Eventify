@@ -6,6 +6,7 @@ Packages Needed:
 npm install express mongoose dotenv express-session
 
 
+Run eventify.js in order to run the server
 Eventify is used to display events in an Area specifically tailed to a certain location
 Allows user submissions in the Submit Tab
 Users must be logged in to submit events
