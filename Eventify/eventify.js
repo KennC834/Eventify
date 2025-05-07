@@ -9,12 +9,12 @@ import Events from "./models/events.js";
 const app = express();
 const PORT = 3000;
 
-dotenv.config();
+dotenv.config();//Used for DB
 app.use(express.static('public'));
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs');//Set view engine as EJS
 app.use(express.urlencoded({ extended: true }));
 
-app.use(session({
+app.use(session({//Session handeling
     secret: process.env.SESSION_SECRET || 'defaultSecret',
     resave: false,
     saveUninitialized: false
@@ -28,11 +28,11 @@ function isLoggedIn(req, res, next) {
     }
 }
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI)//Managed DB running locally
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
 
-app.get('/', async (req, res) => {
+app.get('/', async (req, res) => {//Displays main page and gets events from Event collection 
     try {
         const events = await Event.find();
         res.render('index', { events });
@@ -41,11 +41,11 @@ app.get('/', async (req, res) => {
     }
 });
 
-app.get('/submit', isLoggedIn, (req, res) => {
+app.get('/submit', isLoggedIn, (req, res) => {//Displays submit
     res.render('submit', { title: 'Submit Event - Eventify' });
 });
 
-app.post('/submit', isLoggedIn, async (req, res) => {
+app.post('/submit', isLoggedIn, async (req, res) => {//Posts the info in the text boxes to DB
     const { event_name, host_name, event_date, event_location, event_time } = req.body;
     try {
         const newEvent = new Event({
@@ -62,7 +62,7 @@ app.post('/submit', isLoggedIn, async (req, res) => {
     }
 });
 
-app.get('/login', (req, res) => {
+app.get('/login', (req, res) => {//Displays login page
     res.render('login', { title: 'Login - Eventify' });
 });
 
@@ -71,7 +71,7 @@ app.post('/login', async (req, res) => {
     try {
         const user = await User.findOne({ email, password });
         if (user) {
-            req.session.user = user;
+            req.session.user = user;//Session Handling 
             res.redirect('/');
         } else {
             res.status(401).send('Invalid credentials');
@@ -81,11 +81,11 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/register', (req, res) => {
+app.get('/register', (req, res) => {//Displays Register page
     res.render('register', { title: 'Register - Eventify' });
 });
 
-app.post('/register', async (req, res) => {
+app.post('/register', async (req, res) => {//Sends info to User DB
     const { name, email, password } = req.body;
     try {
         const newUser = new User({ name, email, password });
@@ -96,7 +96,7 @@ app.post('/register', async (req, res) => {
     }
 });
 
-app.get('/events', async (req, res) => {
+app.get('/events', async (req, res) => {//Pulls events from DB
     try {
         const events = await Events.find();
         res.render('events', { events, title: 'Upcoming Events' });
@@ -105,6 +105,6 @@ app.get('/events', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, () => {//Port lol
     console.log(`Server running at http://localhost:${PORT}`);
 });
