@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import User from './models/User.js';
+import Event from './models/events.js';
 const app = express();
 const PORT = 3000;
 
@@ -60,11 +61,28 @@ app.post('/register', async (req, res) => {
     }catch(err) {
         console.error(err);
         console.log(err);
-        res.status(500).send('Internal Server Error');
+        res.status(500).send('Error');
     }
 })
 
-
+app.post('/submit-event', async (req, res) => {
+    const {event_name, host_name, event_date, event_location, event_time} = req.body;
+    try {
+        const newEvent = new Event({
+            event_name,
+            host_name,
+            event_date,
+            event_location,
+            event_time,
+        });
+        await newEvent.save();
+        res.redirect('/');
+    } catch (err) {
+        console.error(err);
+        console.log(err);
+        res.status(500).send('Error');
+    }
+})
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
