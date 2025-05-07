@@ -1,3 +1,53 @@
 <%- include('partials/header') %>
 
+<h1><%= title %></h1>
+
+<div class="event-list">
+    <% if (events && events.length > 0) { %>
+        <% events.forEach(event => { %>
+            <div class="event-box">
+                <h2 class="event-name"><%= event.event_name %></h2>
+                <p class="event-host"><strong>Host:</strong> <%= event.host_name %></p>
+                <p class="event-date"><strong>Date:</strong> <%= event.event_date %></p>
+                <p class="event-location"><strong>Location:</strong> <%= event.event_location %></p>
+                <p class="event-time"><strong>Time:</strong> <%= event.event_time %></p>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <p>No events available at the moment.</p>
+    <% } %>
+</div>
+
+<style> <%# Css template i found %>
+    .event-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: space-between;
+    }
+
+    .event-box {
+        border: 1px solid #ddd;
+        padding: 20px;
+        width: calc(33% - 20px);
+        box-sizing: border-box;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .event-name {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .event-host,
+    .event-date,
+    .event-location,
+    .event-time {
+        font-size: 1rem;
+        margin: 5px 0;
+    }
+</style>
+
 <%- include('partials/footer') %>

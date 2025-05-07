@@ -1,3 +1,26 @@
 <%- include('partials/header') %>
 
+<main style="display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 50vh;">
+    <form method="POST" action="/submit" style="display: flex; flex-direction: column; align-items: center; gap: 1em; width: 300px;">
+        <h1>Submit an Event!</h1>
+
+        <label for="event_name">Event Name</label>
+        <input type="text" name="event_name" id="event_name" placeholder="Event Name" required style="width: 100%; padding: 8px;">
+
+        <label for="host_name">Host Name</label>
+        <input type="text" name="host_name" id="host_name" placeholder="John Doe" required style="width: 100%; padding: 8px;">
+
+        <label for="event_date">Event Date</label>
+        <input type="text" name="event_date" id="event_date" placeholder="MM/DD/YYYY" required style="width: 100%; padding: 8px;">
+
+        <label for="event_location">Event Location</label>
+        <input type="text" name="event_location" id="event_location" placeholder="123 Street RD" required style="width: 100%; padding: 8px;">
+
+        <label for="event_time">Event Time</label>
+        <input type="text" name="event_time" id="event_time" placeholder="12:00 PM" required style="width: 100%; padding: 8px;">
+
+        <button type="submit" style="padding: 8px 16px;">Submit Event</button>
+    </form>
+</main>
+
 <%- include('partials/footer') %>
