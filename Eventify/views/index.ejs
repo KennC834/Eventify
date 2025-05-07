@@ -3,14 +3,14 @@
 <head>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script><!-- All Leaflet Stuff on Website -->
 </head>
 
 <main style="text-align: center;">
     <h1>Welcome to Eventify</h1>
     <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
         <button onclick="document.location='/register'"
-                style="font-size: 20px; padding: 15px 30px; background-color: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 5px;">
+                style="font-size: 20px; padding: 15px 30px; background-color: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 5px;"><!-- Buttons -->
             Register
         </button>
 
@@ -34,14 +34,14 @@
 </main>
 
 <script>
-    // Initialize the map
+    // Starts up map 
     var map = L.map('map').setView([39.702745, -75.111976], 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
-    // Function to geocode the event location (address to lat/lng)
+    //Converts locaiton to Lat and Long
     function geocodeAddress(address, callback) {
         var url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
         fetch(url)
@@ -56,7 +56,7 @@
             .catch(error => console.error('Geocoding error:', error));
     }
 
-    // Fetch events from the server and display them on the map
+    // Displays evets on map(Broken)
     document.addEventListener('DOMContentLoaded', () => {
         fetch('/api/events')  //data from backend
             .then(response => response.json())
