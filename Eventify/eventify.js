@@ -4,17 +4,16 @@ import dotenv from 'dotenv';
 import session from 'express-session';
 import User from './models/User.js';
 import Event from './models/events.js';
-import Events from "./models/events.js";
 
 const app = express();
 const PORT = 3000;
 
-dotenv.config();//Used for DB
+dotenv.config();
 app.use(express.static('public'));
-app.set('view engine', 'ejs');//Set view engine as EJS
+app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 
-app.use(session({//Session handeling
+app.use(session({
     secret: process.env.SESSION_SECRET || 'defaultSecret',
     resave: false,
     saveUninitialized: false
@@ -28,24 +27,31 @@ function isLoggedIn(req, res, next) {
     }
 }
 
-mongoose.connect(process.env.MONGO_URI)//Managed DB running locally
+mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
 
-app.get('/', async (req, res) => {//Displays main page and gets events from Event collection 
+// ✅ FIXED: Main page route no longer passes events to index.ejs
+app.get('/', (req, res) => {
+    res.render('index');
+});
+
+// API route for Leaflet map
+app.get('/api/events', async (req, res) => {
     try {
         const events = await Event.find();
-        res.render('index', { events });
+        res.json(events);
     } catch (err) {
-        res.status(500).send('Error fetching events');
+        res.status(500).json({ error: 'Failed to fetch events' });
     }
 });
 
-app.get('/submit', isLoggedIn, (req, res) => {//Displays submit
+// Submit Event
+app.get('/submit', isLoggedIn, (req, res) => {
     res.render('submit', { title: 'Submit Event - Eventify' });
 });
 
-app.post('/submit', isLoggedIn, async (req, res) => {//Posts the info in the text boxes to DB
+app.post('/submit', isLoggedIn, async (req, res) => {
     const { event_name, host_name, event_date, event_location, event_time } = req.body;
     try {
         const newEvent = new Event({
@@ -62,7 +68,8 @@ app.post('/submit', isLoggedIn, async (req, res) => {//Posts the info in the tex
     }
 });
 
-app.get('/login', (req, res) => {//Displays login page
+// Login
+app.get('/login', (req, res) => {
     res.render('login', { title: 'Login - Eventify' });
 });
 
@@ -71,7 +78,7 @@ app.post('/login', async (req, res) => {
     try {
         const user = await User.findOne({ email, password });
         if (user) {
-            req.session.user = user;//Session Handling 
+            req.session.user = user;
             res.redirect('/');
         } else {
             res.status(401).send('Invalid credentials');
@@ -81,11 +88,12 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/register', (req, res) => {//Displays Register page
+// Register
+app.get('/register', (req, res) => {
     res.render('register', { title: 'Register - Eventify' });
 });
 
-app.post('/register', async (req, res) => {//Sends info to User DB
+app.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
     try {
         const newUser = new User({ name, email, password });
@@ -96,15 +104,17 @@ app.post('/register', async (req, res) => {//Sends info to User DB
     }
 });
 
-app.get('/events', async (req, res) => {//Pulls events from DB
+// View all events
+app.get('/events', async (req, res) => {
     try {
-        const events = await Events.find();
+        const events = await Event.find();
         res.render('events', { events, title: 'Upcoming Events' });
     } catch (err) {
         res.status(500).send('Error fetching events');
     }
 });
 
-app.listen(PORT, () => {//Port lol
+// Start server
+app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });
