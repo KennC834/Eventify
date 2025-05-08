@@ -3,14 +3,14 @@
 <head>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script><!-- All Leaflet Stuff on Website -->
 </head>
 
 <main style="text-align: center;">
     <h1>Welcome to Eventify</h1>
     <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
         <button onclick="document.location='/register'"
-                style="font-size: 20px; padding: 15px 30px; background-color: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 5px;">
+                style="font-size: 20px; padding: 15px 30px; background-color: #4CAF50; color: white; border: none; cursor: pointer; border-radius: 5px;"><!-- Buttons -->
             Register
         </button>
 
@@ -34,17 +34,14 @@
 </main>
 
 <script>
-    var events = [
-        { name: 'AXP', address: '152 State St, Glassboro, NJ' },
-        { name: 'Campus Game Night', address: '201 Rowan Blvd, Glassboro, NJ 08028' }
-    ];
-
-    var map = L.map('map').setView([39.7014, 75.1063], 13);
+    // Starts up map 
+    var map = L.map('map').setView([39.702745, -75.111976], 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
+    //Converts locaiton to Lat and Long
     function geocodeAddress(address, callback) {
         var url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
         fetch(url)
@@ -55,16 +52,25 @@
                     var lon = data[0].lon;
                     callback(lat, lon);
                 }
-            });
+            })
+            .catch(error => console.error('Geocoding error:', error));
     }
 
-    events.forEach(function(event) {
-        geocodeAddress(event.address, function(lat, lon) {
-            L.marker([lat, lon])
-                .addTo(map)
-                .bindPopup(event.name)
-                .openPopup();
-        });
+    // Displays evets on map(Broken)
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('/api/events')  //data from backend
+            .then(response => response.json())
+            .then(events => {
+                events.forEach(event => {
+                    geocodeAddress(event.event_location, (lat, lon) => {
+                        // adds marker
+                        L.marker([lat, lon])
+                            .addTo(map)
+                            .bindPopup(`<b>${event.event_name}</b>`);  //Inputs the name of event
+                    });
+                });
+            })
+            .catch(error => console.error('Error fetching events:', error));
     });
 </script>
 
