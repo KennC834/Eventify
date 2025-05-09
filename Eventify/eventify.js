@@ -31,12 +31,12 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
 
-// ✅ FIXED: Main page route no longer passes events to index.ejs
+// ✅ Send session user to index.ejs
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('index', { user: req.session.user || null });
 });
 
-// API route for Leaflet map
+// ✅ API route for Leaflet map
 app.get('/api/events', async (req, res) => {
     try {
         const events = await Event.find();
@@ -46,11 +46,12 @@ app.get('/api/events', async (req, res) => {
     }
 });
 
-// Submit Event
+// ✅ Submit Event (GET)
 app.get('/submit', isLoggedIn, (req, res) => {
     res.render('submit', { title: 'Submit Event - Eventify' });
 });
 
+// ✅ Submit Event (POST)
 app.post('/submit', isLoggedIn, async (req, res) => {
     const { event_name, host_name, event_date, event_location, event_time } = req.body;
     try {
@@ -68,7 +69,7 @@ app.post('/submit', isLoggedIn, async (req, res) => {
     }
 });
 
-// Login
+// ✅ Login
 app.get('/login', (req, res) => {
     res.render('login', { title: 'Login - Eventify' });
 });
@@ -88,7 +89,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// Register
+// ✅ Register
 app.get('/register', (req, res) => {
     res.render('register', { title: 'Register - Eventify' });
 });
@@ -104,7 +105,7 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// View all events
+// ✅ View all events
 app.get('/events', async (req, res) => {
     try {
         const events = await Event.find();
@@ -114,7 +115,17 @@ app.get('/events', async (req, res) => {
     }
 });
 
-// Start server
+// ✅ Logout route
+app.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).send('Logout failed');
+        }
+        res.redirect('/');
+    });
+});
+
+// ✅ Start server
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });
