@@ -21,6 +21,8 @@ const eventSchema = new mongoose.Schema({
         type: String,
         required: true
     }
-})
+}, 
+{capped: {size: 10000, max: 20}}
+)
 const Event = mongoose.model('Event', eventSchema);
 export default Event;
